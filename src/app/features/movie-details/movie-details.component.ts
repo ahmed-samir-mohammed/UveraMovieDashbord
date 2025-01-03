@@ -15,7 +15,9 @@ import { Movie } from '../../core/models/trend.interface';
         [alt]="movie.title"
       />
 
-      <div class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-80 z-10 pt-32">
+      <div
+        class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-80 z-10 pt-32"
+      >
         <div class="flex-1 mx-auto w-[90vw]">
           <h1 class="text-3xl font-bold text-gray-800">{{ movie.title }}</h1>
           <p class="italic text-gray-500">{{ movie.original_title }}</p>
@@ -39,7 +41,8 @@ import { Movie } from '../../core/models/trend.interface';
           <div class="mt-4">
             <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
             <p>
-              <strong>Language:</strong> {{ movie.original_language | uppercase }}
+              <strong>Language:</strong>
+              {{ movie.original_language | uppercase }}
             </p>
             <p><strong>Genres:</strong> {{ getGenres() }}</p>
             <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
@@ -67,7 +70,8 @@ export class MovieDetailsComponent implements OnInit {
     id: 402431,
     original_language: 'en',
     original_title: 'Wicked',
-    overview: "In the land of Oz, ostracized and misunderstood green-skinned Elphaba is forced to share a room with the popular aristocrat Glinda at Shiz University, and the two's unlikely friendship is tested as they begin to fulfill their respective destinies as Glinda the Good and the Wicked Witch of the West.",
+    overview:
+      "In the land of Oz, ostracized and misunderstood green-skinned Elphaba is forced to share a room with the popular aristocrat Glinda at Shiz University, and the two's unlikely friendship is tested as they begin to fulfill their respective destinies as Glinda the Good and the Wicked Witch of the West.",
     popularity: 2156.489,
     poster_path: '/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg',
     release_date: '2024-11-20',
@@ -76,7 +80,7 @@ export class MovieDetailsComponent implements OnInit {
     vote_average: 7.4,
     vote_count: 880,
     name: '',
-    media_type: ''
+    media_type: '',
   };
 
   getGenres(): string {
