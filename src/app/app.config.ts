@@ -6,16 +6,14 @@ import { routes } from './app.routes';
 import { HTTPInterceptor } from './core/interceptors/http.interceptor';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { moviesReducer } from './core/store/reducer';
-import { MoviesEffects } from './core/store/effects';
-
+import { Effects, Reducers } from './core/store';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([HTTPInterceptor])),
-    provideStore({ movies: moviesReducer }),
-    provideEffects([MoviesEffects]),
+    provideStore(Reducers),
+    provideEffects(Effects),
   ],
 };

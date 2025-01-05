@@ -22,10 +22,9 @@ export interface Movie {
   vote_count: number;
 }
 
-export interface MovieDetails {
-  movie_results: Movie[];
-  person_results: [];
-  tv_results: [];
-  tv_episode_results: [];
-  tv_season_results: [];
+
+export interface TrendState {
+  movies: Movie[];
+  loading: boolean;
+  error: string | null;
 }

@@ -2,10 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import * as MovieActions from './actions';
 import { catchError, exhaustMap, map, mergeMap, of, pipe, tap } from 'rxjs';
-import { TMDBService } from '../services/tmdb.service';
+import { TMDBService } from '../../services/tmdb.service';
 
 @Injectable()
-export class MoviesEffects {
+export class TrendEffects {
   private actions$ = inject(Actions);
   private tmdbService = inject(TMDBService);
 
