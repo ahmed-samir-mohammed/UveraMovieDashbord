@@ -3,5 +3,6 @@ import { GenresReducer } from "./genres/reducer";
 import { TrendEffects } from "./trending/effects";
 import { TrendReducer } from "./trending/reducer";
 
-export const Reducers = { trend: TrendReducer, genres: GenresReducer };
-export const Effects = [TrendEffects, GenresEffects];
+const Reducers = { trend: TrendReducer, genres: GenresReducer };
+const Effects = [TrendEffects, GenresEffects];
+export const Store = { Reducers, Effects };

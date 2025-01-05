@@ -12,11 +12,14 @@ export class TrendEffects {
   loadTrendingMovies$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(MovieActions.loadTrendingMovies),
-      tap(() => MovieActions.startLoading()),
-      mergeMap(() =>
-        this.tmdbService.getTrendingMovies().pipe(
+      // tap(() => MovieActions.startLoading()),
+      mergeMap(({ page }) =>
+        this.tmdbService.getTrendingMovies(page).pipe(
           map((data) =>
-            MovieActions.loadTrendingMoviesSuccess({ movies: data.results })
+            MovieActions.loadTrendingMoviesSuccess({
+              results: data.results,
+              total_pages: data.total_pages,
+            })
           ),
           catchError((error) =>
             of(MovieActions.loadTrendingMoviesFailure({ error: error.message }))

@@ -1,6 +1,10 @@
-export interface MovieResponse {
+export interface TrendResponse {
   page: number;
   results: Movie[];
+  total_pages: number;
+  total_results: number;
+  loading: boolean;
+  error: string | null;
 }
 
 export interface Movie {
@@ -20,11 +24,4 @@ export interface Movie {
   video: boolean;
   vote_average: number;
   vote_count: number;
-}
-
-
-export interface TrendState {
-  movies: Movie[];
-  loading: boolean;
-  error: string | null;
 }

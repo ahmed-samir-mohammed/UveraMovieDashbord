@@ -14,6 +14,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-movie-details',
   imports: [UpperCasePipe, NgIf, AsyncPipe],
+  standalone: true,
   template: `
     @defer {
     <ng-container *ngIf="movie$ | async as movie">
