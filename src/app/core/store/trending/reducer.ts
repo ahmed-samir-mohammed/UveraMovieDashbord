@@ -1,8 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import * as MovieActions from './actions';
-import { MoviesState, initialState } from './state';
+import { initialState } from './state';
 
-export const moviesReducer = createReducer(
+export const TrendReducer = createReducer(
   initialState,
   on(MovieActions.startLoading, (state) => ({
     ...state,

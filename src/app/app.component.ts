@@ -13,7 +13,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
       color="#fff"
     ></ngx-spinner>
     <div
-      class="bg-gray-900 backdrop-blur-xl bg-opacity-50 pt-24 min-h-screen"
+      class="bg-gray-900 backdrop-blur-xl bg-opacity-50 h-screen overflow-y-auto"
     >
       <app-navbar />
       <router-outlet />

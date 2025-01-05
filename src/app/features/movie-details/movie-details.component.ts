@@ -1,113 +1,119 @@
-import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { TMDBService } from './../../core/services/tmdb.service';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Movie } from '../../core/models/trend.interface';
+import { Store } from '@ngrx/store';
+import { selectGenresMap } from '../../core/store/genres/selectors';
+import { Genres } from '../../core/models/genres.interface';
+import * as GenreActions from '../../core/store/genres/actions';
+import { MovieDetails } from '../../core/models/movieDetails.interface';
+import { finalize, map, Observable, switchMap, tap } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-movie-details',
-  imports: [UpperCasePipe, NgIf],
-  template: `<div class="container mx-auto px-4 py-6">
-    <div class="flex flex-col md:flex-row gap-6 items-start">
-      <img
-        class="rounded-lg fixed top-0 left-0 w-screen z-0 h-screen object-cover"
-        [src]="'https://image.tmdb.org/t/p/w500' + movie.backdrop_path"
-        [alt]="movie.title"
-      />
-
+  imports: [UpperCasePipe, NgIf, AsyncPipe],
+  template: `
+    @defer {
+    <ng-container *ngIf="movie$ | async as movie">
       <div
-        class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-80 z-10 pt-32"
+        class="relative flex flex-col md:flex-row gap-6 items-start w-full min-h-screen bg-fixed bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://image.tmdb.org/t/p/original{{
+          movie.backdrop_path
+        }}');"
       >
-        <div class="flex-1 mx-auto w-[90vw]">
-          <h1 class="text-3xl font-bold text-gray-800">{{ movie.title }}</h1>
-          <p class="italic text-gray-500">{{ movie.original_title }}</p>
-          <div class="flex gap-2 mt-2">
-            <span
-              *ngIf="!movie.adult"
-              class="px-2 py-1 bg-green-500 text-white text-xs rounded"
-            >
-              All Ages
-            </span>
-            <span
-              *ngIf="movie.adult"
-              class="px-2 py-1 bg-red-500 text-white text-xs rounded"
-            >
-              Adults Only
-            </span>
-          </div>
+        <div
+          class="absolute overflow-y-auto top-0 left-0 w-full h-full flex items-center bg-black bg-opacity-80 z-10 pt-32 lg:pt-8"
+        >
+          <div
+            class="flex flex-col lg:flex-row items-center gap-8 mx-auto w-[90vw] mt-48 mb-16 lg:mb-0 lg:mt-0"
+          >
+            <div class="lg:w-[60%]">
+              <div class="flex justify-between items-center">
+                <h1 class="text-4xl font-bold text-white mb-4">
+                  {{ movie.title }}
+                </h1>
+                <div class="bg-amber-500 text-black py-2 px-4 rounded">
+                  {{ movie.vote_average.toFixed(1) }}
+                </div>
+              </div>
+              <p class="italic text-gray-300">{{ movie.original_title }}</p>
+              <div class="flex gap-2 mt-2">
+                <span
+                  *ngIf="movie.adult"
+                  class="px-2 py-1 bg-red-500 text-white text-xs rounded"
+                >
+                  Adults Only
+                </span>
+              </div>
 
-          <p class="text-gray-700 mt-4">{{ movie.overview }}</p>
+              <p class="text-gray-300 mt-4">{{ movie.overview }}</p>
 
-          <div class="mt-4">
-            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-            <p>
-              <strong>Language:</strong>
-              {{ movie.original_language | uppercase }}
-            </p>
-            <p><strong>Genres:</strong> {{ getGenres() }}</p>
-            <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
-            <p>
-              <strong>Rating:</strong> {{ movie.vote_average }} / 10 ({{
-                movie.vote_count
-              }}
-              votes)
-            </p>
+              <div class="mt-4 flex gap-2">
+                <p
+                  class="text-gray-300 bg-white bg-opacity-20 py-1 px-3 rounded"
+                >
+                  {{ movie.release_date }}
+                </p>
+                <p
+                  class="text-gray-300 bg-white bg-opacity-20 py-1 px-3 rounded"
+                >
+                  {{ movie.original_language | uppercase }}
+                </p>
+                <p
+                  class="text-gray-300 bg-white bg-opacity-20 py-1 px-3 rounded"
+                >
+                  {{ getGenres(movie.genres) }}
+                </p>
+                <p
+                  class="text-gray-300 bg-white bg-opacity-20 py-1 px-3 rounded"
+                >
+                  {{ movie.popularity }}
+                </p>
+              </div>
+            </div>
+            <div class="lg:w-4/12 flex justify-center">
+              <img
+                class="rounded-lg w-[90%] lg:w-[80%]"
+                src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+                [alt]="movie.title"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div> `,
+    </ng-container>
+    }
+  `,
   styles: ``,
 })
 export class MovieDetailsComponent implements OnInit {
   route = inject(ActivatedRoute);
   tmdbService = inject(TMDBService);
+  store = inject(Store);
+  spinner = inject(NgxSpinnerService);
+  genresMap$ = this.store.select(selectGenresMap);
   id!: string;
-  @Input() movie: Movie = {
-    adult: false,
-    backdrop_path: '/uVlUu174iiKhsUGqnOSy46eIIMU.jpg',
-    genre_ids: [18, 10749, 14],
-    id: 402431,
-    original_language: 'en',
-    original_title: 'Wicked',
-    overview:
-      "In the land of Oz, ostracized and misunderstood green-skinned Elphaba is forced to share a room with the popular aristocrat Glinda at Shiz University, and the two's unlikely friendship is tested as they begin to fulfill their respective destinies as Glinda the Good and the Wicked Witch of the West.",
-    popularity: 2156.489,
-    poster_path: '/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg',
-    release_date: '2024-11-20',
-    title: 'Wicked',
-    video: false,
-    vote_average: 7.4,
-    vote_count: 880,
-    name: '',
-    media_type: '',
-  };
-
-  getGenres(): string {
-    const genresMap: { [key: number]: string } = {
-      18: 'Drama',
-      10749: 'Romance',
-      14: 'Fantasy',
-    };
-    return this.movie.genre_ids
-      .map((id: any) => genresMap[id] || 'Unknown')
-      .join(', ');
-  }
+  movie$ = this.route.params.pipe(
+    map((params) => +params['id']),
+    switchMap((id) => this.tmdbService.getMovieDetails(id))
+  );
   constructor() {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id')!;
-    // this.getMovieDetails();
+    this.store.dispatch(GenreActions.loadGenres());
   }
 
-  getMovieDetails() {
-    this.tmdbService
-      .getExternalIDs(Number(this.id))
-      .subscribe((res) => console.log(res));
-    this.tmdbService
-      .getMovieDetails(Number(this.id), 'tt13186482')
-      .subscribe((movie) => {
-        console.log(movie);
-      });
+  private getMovieDetails(id: number | string): Observable<MovieDetails> {
+    return this.tmdbService.getMovieDetails(id);
+  }
+
+  getGenres(genre: Genres[]): string {
+    let genresList: Genres[] = [];
+    this.genresMap$.subscribe((genresMap) => {
+      genresList = genre.map((genre) => genresMap[genre.id] || 'Unknown');
+    });
+    return genresList.join(', ');
   }
 }
