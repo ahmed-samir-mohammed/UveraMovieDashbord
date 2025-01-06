@@ -20,7 +20,6 @@ UveraMovieDashboard is a web application designed to display trending movies, mo
 - **NgxSpinner:** To display loading indicators, enhancing user experience.
 - **Tailwind CSS and Flowbite:** Used to enhance the UI design, ensuring modern and responsive user interface components with minimal custom styling required.
 
-
 ## Structure
 
 ```
