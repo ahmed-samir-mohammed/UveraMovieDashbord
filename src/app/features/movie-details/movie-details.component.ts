@@ -15,6 +15,7 @@ import {
   tap,
   catchError,
   of,
+  timer,
 } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -117,10 +118,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
                   }
                 </div>
                 <!-- Video Links -->
+                @if ( movie.videos.results.length > 0 ){
                 <div class="w-full mb-8 mt-4">
                   <h3 class="text-xl text-white mb-2">Videos</h3>
                   <div
-                    class="flex flex-row flex-wrap gap-2 h-[15rem] overflow-y-auto scrollbar-hide"
+                    class="flex flex-row flex-wrap gap-2 max-h-[15rem] overflow-y-auto scrollbar-hide"
                   >
                     @for (video of movie.videos.results; track $index) {
                     <a
@@ -133,6 +135,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
                     }
                   </div>
                 </div>
+                }
               </div>
               <!-- Movie Poster -->
               <div
@@ -174,7 +177,9 @@ export class MovieDetailsComponent implements OnInit {
     tap(() => this.spinner.show()),
     switchMap((id) =>
       this.getMovieDetails(id).pipe(
-        finalize(() => this.spinner.hide()),
+        finalize(() => {
+          timer(1000).subscribe(() => this.spinner.hide());
+        }),
         catchError((err) => {
           console.error(err);
           this.spinner.hide();
