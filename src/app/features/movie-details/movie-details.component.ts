@@ -136,7 +136,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
               </div>
               <!-- Movie Poster -->
               <div
-                class="lg:w-4/12 flex justify-center lg:justify-end order-1 lg:order-2"
+                class="lg:w-4/12 flex justify-center lg:justify-end order-1 mb-8 lg:order-2"
               >
                 <img
                   class="rounded-lg w-[90%] md:w-[50%] lg:w-[80%]"

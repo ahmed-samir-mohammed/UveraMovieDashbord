@@ -34,8 +34,10 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
   template: `
     <div class="lg:w-[95vw] w-[90vw] mx-auto mb-8 mt-[10rem]">
       <h1 class="text-2xl lg:text-3xl font-bold mb-4 text-white">Search</h1>
-      <div class="flex gap-8">
-        <div class="bg-white bg-opacity-10 rounded-lg p-4 h-fit flex w-full lg:w-2/12 sticky top-12">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div
+          class="bg-white bg-opacity-10 rounded-lg p-4 h-fit flex w-full lg:w-2/12 sticky top-12"
+        >
           <form
             [formGroup]="searchForm"
             (ngSubmit)="submitSearch()"
@@ -53,7 +55,9 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
                 />
               </div>
               <div class="flex flex-col gap-2 w-full ">
-                <label for="releaseYear" class="text-white"> Release Year </label>
+                <label for="releaseYear" class="text-white">
+                  Release Year
+                </label>
                 <input
                   appOnlyNumbers
                   id="releaseYear"
@@ -66,8 +70,8 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
                   step="1"
                   placeholder="Release Year"
                 />
-                @if ((searchForm.get('releaseYear')?.errors?.['min'] ?? false) ||
-                (searchForm.get('releaseYear')?.errors?.['max'] ?? false)) {
+                @if ((searchForm.get('releaseYear')?.errors?.['min'] ?? false)
+                || (searchForm.get('releaseYear')?.errors?.['max'] ?? false)) {
                 <div class="text-red-500 text-sm">
                   Year must be between 1900 and 2099.
                 </div>
@@ -131,7 +135,7 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
             </button>
           </form>
         </div>
-        <div class="flex flex-col mt-8  w-full lg:w-10/12">
+        <div class="flex flex-col mt-8 w-full lg:w-10/12">
           @if (searchResult()?.length === 0) {
           <p class="text-white text-base text-center">No Movie Found</p>
           } @defer (when searchResult()) {

@@ -4,13 +4,12 @@ import { initFlowbite } from 'flowbite';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
-  template: `
-    <router-outlet />
-  `,
+  template: ` <router-outlet /> `,
   styles: [],
 })
 export class AppComponent implements OnInit {
-  ngOnInit() {
+  constructor() {
     initFlowbite();
   }
+  ngOnInit() {}
 }
