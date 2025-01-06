@@ -1,4 +1,4 @@
-import { Class } from './../../../../node_modules/@types/estree/index.d';
+import { Class } from 'estree';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -49,7 +49,7 @@ import { RouterLink } from '@angular/router';
           </button>
           <a
             routerLink="search"
-            class="block p-2 w-10 h-10 text-white bg-blue-700 rounded-xl hover:text-blue-900 cursor-pointer"
+            class="block p-2 w-10 h-10 text-white bg-blue-700 rounded-lg hover:text-blue-900 cursor-pointer"
             aria-current="page"
           >
             <img class="w-fit" src="/search.svg" />
@@ -71,7 +71,7 @@ import { RouterLink } from '@angular/router';
             <li class="hidden md:block">
               <a
                 routerLink="search"
-                class="block p-2 w-10 h-10 text-white bg-blue-700 rounded-xl hover:text-blue-900 cursor-pointer"
+                class="block p-2 w-10 h-10 text-white bg-blue-700 rounded-lg hover:text-blue-900 cursor-pointer"
                 aria-current="page"
               >
                 <img class="w-fit" src="/search.svg" />

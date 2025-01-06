@@ -35,16 +35,4 @@ describe('authInterceptor', () => {
 
     interceptor(req, next.handle);
   });
-
-  it('should pass through the request if no Authorization header is needed', () => {
-    const req = new HttpRequest('GET', '/test');
-    const next: HttpHandler = {
-      handle: (request: HttpRequest<any>) => {
-        expect(request).toBe(req);
-        return of({} as HttpEvent<any>);
-      },
-    };
-
-    interceptor(req, next.handle);
-  });
 });

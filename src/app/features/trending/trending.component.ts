@@ -1,48 +1,89 @@
-import { Component, inject } from '@angular/core';
-import { MovieCardComponent } from '../../shared/movie-card/movie-card.component';
+import { Component, inject, WritableSignal } from '@angular/core';
+import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
 import { Store } from '@ngrx/store';
 import {
   selectLoading,
   selectTrend,
-} from '../../core/store/trending/selectors';
-import * as MovieActions from '../../core/store/trending/actions';
-import { AsyncPipe } from '@angular/common';
+  selectPage as selectCurrentPage,
+  selectTotalPages,
+} from '../../store/trending/selectors';
+import * as MovieActions from '../../store/trending/actions';
+import { NgFor } from '@angular/common';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-trending',
-  imports: [MovieCardComponent, AsyncPipe, NgxSpinnerModule],
+  imports: [MovieCardComponent, NgxSpinnerModule, NgxPaginationModule, NgFor],
+  standalone: true,
   template: `
-    <div class="w-[90vw] mx-auto mb-8 mt-[10rem]">
+    <div class="w-[90vw] mx-auto mb-8 mt-[8rem] lg:mt-[10rem]">
       <h1 class="text-2xl lg:text-3xl font-bold mb-4 text-white">
         Trending Movies
       </h1>
-      @defer (when !(loading$ | async)) {
+      @defer (when !loading()) {
       <div
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
       >
-        @for (movie of movies$ | async; track $index) {
-        <app-movie-card [movie]="movie"></app-movie-card>
+        @if ((movies()?.length ?? 0) > 0) {
+        <ng-container
+          *ngFor="
+            let movie of movies() || []
+              | paginate
+                : {
+                    itemsPerPage: 20,
+                    currentPage: currentPage(),
+                    totalItems: totalPages()
+                  }
+          "
+        >
+          <app-movie-card [movie]="movie"></app-movie-card>
+        </ng-container>
         }
+      </div>
+      <div class="flex justify-center mt-8">
+        <pagination-controls
+          class="my-pagination rounded"
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          previousLabel="Previous"
+          nextLabel="Next"
+          screenReaderPaginationLabel="Pagination"
+          screenReaderPageLabel="page"
+        ></pagination-controls>
       </div>
       }
     </div>
   `,
-  styles: ``,
+  styles: [],
 })
 export class TrendingComponent {
   store = inject(Store);
-  movies$ = this.store.select(selectTrend);
-  loading$ = this.store.select(selectLoading);
   spinner = inject(NgxSpinnerService);
-  constructor() {}
-  ngOnInit() {
-    this.store
-      .select(selectLoading)
-      .subscribe((isLoading) =>
-        isLoading ? this.spinner.show() : this.spinner.hide()
-      );
 
-    this.store.dispatch(MovieActions.loadTrendingMovies());
+  movies = toSignal(this.store.select(selectTrend));
+  loading = toSignal(this.store.select(selectLoading));
+  totalPages = toSignal(this.store.select(selectTotalPages));
+  currentPage: WritableSignal<number> = signal(1);
+
+  constructor() {
+    this.store
+      .select(selectCurrentPage)
+      .pipe(takeUntilDestroyed())
+      .subscribe((page) => this.currentPage.set(page));
+  }
+
+  ngOnInit() {
+    this.loading() ? this.spinner.show() : this.spinner.hide();
+    this.store.dispatch(
+      MovieActions.loadTrendingMovies({ page: this.currentPage() ?? 1 })
+    );
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.store.dispatch(MovieActions.loadTrendingMovies({ page }));
   }
 }
