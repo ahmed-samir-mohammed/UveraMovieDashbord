@@ -3,7 +3,7 @@ import { Genres } from "./genres.interface";
 export interface MovieDetails {
   adult: boolean;
   backdrop_path: string | null;
-  belongs_to_collection: string | null;
+  belongs_to_collection: BelongsToCollection;
   budget: number;
   genres: Genres[];
   homepage: string | null;
@@ -24,9 +24,17 @@ export interface MovieDetails {
   tagline: string | null;
   title: string;
   video: boolean;
+  videos: { results: VideosResult[]};
   vote_average: number;
   vote_count: number;
 }
+
+export interface BelongsToCollection{
+    backdrop_path: string;
+    id: number;
+    name: string;
+    poster_path: string;
+  };
 
 export interface ProductionCompany {
   id: number;
@@ -44,4 +52,17 @@ export interface SpokenLanguage {
   english_name: string;
   iso_639_1: string;
   name: string;
+}
+
+export interface VideosResult {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  official: boolean;
+  published_at: string;
+  site: string;
+  size: number;
+  type: string;
 }

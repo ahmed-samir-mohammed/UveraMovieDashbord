@@ -5,6 +5,7 @@ import { environment as env } from '../../../environments/environment.developmen
 import { TrendResponse } from '../models/trend.interface';
 import { GenresResponse } from '../models/genres.interface';
 import { MovieDetails } from '../models/movieDetails.interface';
+import { Countries } from '../models/countries.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,17 @@ export class TMDBService {
     );
   }
 
-  searchMovies(query: string): Observable<any> {
-    return this.http.get(`${env.TMDB_URL}/search/movie?&query=${query}`);
+  searchMovies(argu: {
+    query: string;
+    adult: boolean;
+    releaseYear: string;
+    page: number;
+    region: number;
+    year: string;
+  }): Observable<TrendResponse> {
+    return this.http.get<TrendResponse>(
+      `${env.TMDB_URL}/search/movie?query=${argu.query}&include_adult=${argu.adult}&language=en-US&primary_release_year=${argu.releaseYear}&page=${argu.page}&region=${argu.region}4&year=${argu.year}'`
+    );
   }
 
   getMovieDetails(movieId: number | string): Observable<MovieDetails> {
@@ -36,5 +46,11 @@ export class TMDBService {
 
   getGenres(): Observable<GenresResponse> {
     return this.http.get<GenresResponse>(`${env.TMDB_URL}/genre/movie/list`);
+  }
+
+  getCountries(): Observable<Countries[]> {
+    return this.http.get<Countries[]>(
+      `${env.TMDB_URL}/configuration/countries`
+    );
   }
 }

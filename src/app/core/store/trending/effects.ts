@@ -12,7 +12,6 @@ export class TrendEffects {
   loadTrendingMovies$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(MovieActions.loadTrendingMovies),
-      // tap(() => MovieActions.startLoading()),
       mergeMap(({ page }) =>
         this.tmdbService.getTrendingMovies(page).pipe(
           map((data) =>

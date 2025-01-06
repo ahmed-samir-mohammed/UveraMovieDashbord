@@ -32,7 +32,3 @@ export const TrendReducer = createReducer(
     error,
   }))
 );
-
-console.log(
-  TrendReducer(initialState, MovieActions.loadTrendingMoviesSuccess)
-);

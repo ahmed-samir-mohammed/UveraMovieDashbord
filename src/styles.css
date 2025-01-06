@@ -2,3 +2,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ngx-pagination {
+  @apply gap-1 flex mb-0 bg-white bg-opacity-10 py-3 px-2 rounded-lg text-white;
+}
+.ngx-pagination li a {
+  @apply rounded hover:bg-blue-700 text-white;
+}
+.ngx-pagination .current {
+  @apply !bg-blue-700 text-white rounded;
+}
+.ngx-pagination .pagination-previous a:before,
+.ngx-pagination .pagination-previous.disabled:before,
+.ngx-pagination .pagination-next a:after,
+.ngx-pagination .pagination-next.disabled:after {
+  @apply !hidden;
+}

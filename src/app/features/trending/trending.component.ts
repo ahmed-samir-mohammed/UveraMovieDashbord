@@ -49,7 +49,7 @@ import { signal } from '@angular/core';
           </ng-container>
         </ng-container>
       </div>
-      <div class="flex justify-center mt-4">
+      <div class="flex justify-center mt-8">
         <pagination-controls
           class="my-pagination rounded"
           (pageChange)="onPageChange($event)"
@@ -63,34 +63,7 @@ import { signal } from '@angular/core';
       }
     </div>
   `,
-  styles: [
-    `
-      .my-pagination
-        ::ng-deep
-        .ngx-pagination {
-          @apply gap-1 flex mb-0
-        }
-        .my-pagination
-        ::ng-deep
-        .ngx-pagination
-        li
-        a {
-        @apply rounded bg-white bg-opacity-10 text-white hover:bg-blue-700;
-      }
-      .my-pagination ::ng-deep .ngx-pagination .current {
-        @apply bg-blue-700 text-white rounded;
-      }
-      .my-pagination ::ng-deep .ngx-pagination .pagination-previous a:before,
-      .my-pagination
-        ::ng-deep
-        .ngx-pagination
-        .pagination-previous.disabled:before,
-      .my-pagination ::ng-deep .ngx-pagination .pagination-next a:after,
-      .my-pagination ::ng-deep .ngx-pagination .pagination-next.disabled:after {
-        @apply hidden;
-      }
-    `,
-  ],
+  styles: [],
 })
 export class TrendingComponent {
   store = inject(Store);
@@ -105,6 +78,9 @@ export class TrendingComponent {
   constructor() {}
 
   ngOnInit() {
+    this.loading$.subscribe((isLoading) =>
+      isLoading ? this.spinner.show() : this.spinner.hide()
+    );
     this.store.dispatch(MovieActions.loadTrendingMovies({ page: this.p() }));
     this.currentPage$.subscribe((page) => this.p.set(page));
     this.totalPages$.subscribe((total) => this.totalPages.set(total));
