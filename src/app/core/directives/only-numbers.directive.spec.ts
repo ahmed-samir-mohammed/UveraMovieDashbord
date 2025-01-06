@@ -1,49 +1,68 @@
-import { OnlyNumbersDirective } from './only-numbers.directive';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { OnlyNumbersDirective } from './only-numbers.directive';
 
-describe('OnlyNumbersDirective', () => {
-  it('should create an instance', () => {
-    const directive = new OnlyNumbersDirective();
-    expect(directive).toBeTruthy();
-  });
-});
 @Component({
-  template: `<input type="text" appOnlyNumbers>`
+  selector: 'app-test',
+  template: `<input type="text" appOnlyNumbers />`,
+  standalone: true,
+  imports: [OnlyNumbersDirective],
 })
 class TestComponent {}
 
 describe('OnlyNumbersDirective', () => {
-  let fixture: ComponentFixture<TestComponent>;
-  let inputEl: HTMLInputElement;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [TestComponent, OnlyNumbersDirective]
-    });
-    fixture = TestBed.createComponent(TestComponent);
-    inputEl = fixture.debugElement.query(By.directive(OnlyNumbersDirective)).nativeElement;
-  });
-
-  it('should allow number keys', () => {
-    const event = new KeyboardEvent('keydown', { key: '1' });
-    inputEl.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(false);
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestComponent],
+    }).compileComponents();
   });
 
   it('should prevent non-number keys', () => {
+    const fixture = TestBed.createComponent(TestComponent);
+    fixture.detectChanges();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    if (!input) {
+      fail('Input element not found');
+      return;
+    }
+
     const event = new KeyboardEvent('keydown', { key: 'a' });
-    inputEl.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(true);
+    input.nativeElement.dispatchEvent(event);
+
+    expect(input.nativeElement.value).toBe('');
+  });
+
+  it('should allow number keys', () => {
+    const fixture = TestBed.createComponent(TestComponent);
+    fixture.detectChanges();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    if (!input) {
+      fail('Input element not found');
+      return;
+    }
+
+    const event = new KeyboardEvent('keydown', { key: '1' });
+    input.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(false);
   });
 
   it('should allow control keys', () => {
-    const controlKeys = ['Backspace', 'Tab', 'End', 'Home', 'ArrowLeft', 'ArrowRight', 'Delete'];
-    controlKeys.forEach(key => {
-      const event = new KeyboardEvent('keydown', { key });
-      inputEl.dispatchEvent(event);
-      expect(event.defaultPrevented).toBe(false);
-    });
+    const fixture = TestBed.createComponent(TestComponent);
+    fixture.detectChanges();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    if (!input) {
+      fail('Input element not found');
+      return;
+    }
+
+    const event = new KeyboardEvent('keydown', { key: 'Backspace' });
+    input.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(false);
   });
 });

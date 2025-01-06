@@ -32,6 +32,6 @@ import { RouterLink } from '@angular/router';
 export class MovieCardComponent {
   @Input() movie!: Movie;
   navigateToDetails(): string {
-    return this.movie ? `/movie/${this.movie.id}` : '/'; // التحقق من movie
+    return this.movie ? `/movie/${this.movie.id}` : '/'; 
   }
 }

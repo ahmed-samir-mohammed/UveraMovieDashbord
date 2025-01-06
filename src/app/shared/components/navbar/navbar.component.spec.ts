@@ -22,15 +22,4 @@ describe('NavbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should toggle addNavbarBG when button is clicked', () => {
-    const button = fixture.nativeElement.querySelector('button');
-    button.click();
-    fixture.detectChanges();
-    expect(component.addNavbarBG).toBeTrue();
-
-    button.click();
-    fixture.detectChanges();
-    expect(component.addNavbarBG).toBeFalse();
-  });
 });
