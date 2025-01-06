@@ -12,6 +12,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-trending',
@@ -33,14 +34,14 @@ import { signal } from '@angular/core';
       <div
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
       >
-        <ng-container *ngIf="movies$ | async as movies">
+        <ng-container *ngIf="movies()">
           <ng-container
             *ngFor="
-              let movie of movies
+              let movie of movies() || []
                 | paginate
                   : {
-                      itemsPerPage: 10,
-                      currentPage: p(),
+                      itemsPerPage: 20,
+                      currentPage: currentPage(),
                       totalItems: totalPages()
                     }
             "
@@ -68,26 +69,28 @@ import { signal } from '@angular/core';
 export class TrendingComponent {
   store = inject(Store);
   spinner = inject(NgxSpinnerService);
-  movies$ = this.store.select(selectTrend);
+  movies = toSignal(this.store.select(selectTrend));
   loading$ = this.store.select(selectLoading);
-  currentPage$ = this.store.select(selectCurrentPage);
-  totalPages$ = this.store.select(selectTotalPages);
-  p = signal(1);
-  totalPages = signal<number | undefined>(undefined);
-
-  constructor() {}
+  currentPage = toSignal(this.store.select(selectCurrentPage), {
+    initialValue: 1,
+  });
+  totalPages = toSignal(this.store.select(selectTotalPages));
+  constructor() {
+    this.loading$
+      .pipe(takeUntilDestroyed())
+      .subscribe((isLoading) =>
+        isLoading ? this.spinner.show() : this.spinner.hide()
+      );
+  }
 
   ngOnInit() {
-    this.loading$.subscribe((isLoading) =>
-      isLoading ? this.spinner.show() : this.spinner.hide()
+    this.store.dispatch(
+      MovieActions.loadTrendingMovies({ page: this.currentPage() ?? 1 })
     );
-    this.store.dispatch(MovieActions.loadTrendingMovies({ page: this.p() }));
-    this.currentPage$.subscribe((page) => this.p.set(page));
-    this.totalPages$.subscribe((total) => this.totalPages.set(total));
   }
 
   onPageChange(page: number): void {
-    this.p.set(page);
+    // this.currentPage.set(page);
     this.store.dispatch(MovieActions.loadTrendingMovies({ page }));
   }
 }
