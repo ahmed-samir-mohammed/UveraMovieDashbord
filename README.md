@@ -1,3 +1,7 @@
+# UveraMovieDashboard
+
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+
 ## Project Overview
 
 UveraMovieDashboard is a web application designed to display trending movies, movie details, and search functionality using the TMDB API. The application leverages Angular as the primary framework and employs modern technologies like NgRx for state management and RxJS for reactive data handling.
@@ -57,10 +61,6 @@ src/
 │   │   ├── genres/
 │   │   └── trending/
 ```
-
-# UveraMovieDashboard
-
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
 
 ## Development server
 
