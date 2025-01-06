@@ -9,6 +9,7 @@ UveraMovieDashboard is a web application designed to display trending movies, mo
 - **State Management:** NgRx is used for centralized state management to ensure predictable behavior and easier testing.
 - **Interceptor:** An HTTP Interceptor is used to add headers like Authorization to every HTTP request.
 - **Lazy Loading:** Modules are lazy-loaded to enhance application performance and reduce initial load time.
+- **Directives:** A custom directive was implemented to allow only numeric input fields, ensuring better data validation and UX.
 
 ## Technical Choices
 
@@ -17,6 +18,8 @@ UveraMovieDashboard is a web application designed to display trending movies, mo
 - **RxJS Signals:** To optimize performance and simplify reactive data handling.
 - **NgxPagination:** To provide seamless pagination experience.
 - **NgxSpinner:** To display loading indicators, enhancing user experience.
+- **Tailwind CSS and Flowbite:** Used to enhance the UI design, ensuring modern and responsive user interface components with minimal custom styling required.
+
 
 ## Structure
 
@@ -26,6 +29,8 @@ src/
 │   ├── core/
 │   │   ├── interceptors/
 │   │   │   └── http.interceptor.ts
+│   │   ├── directives/
+│   │   │   └── only-numbers.directive.ts
 │   │   ├── services/
 │   │   │   └── tmdb.service.ts
 │   │   ├── models/
