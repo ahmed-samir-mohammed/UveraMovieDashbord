@@ -13,6 +13,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-trending',
@@ -76,7 +77,10 @@ export class TrendingComponent {
   }
 
   ngOnInit() {
-    this.loading() ? this.spinner.show() : this.spinner.hide();
+    this.loading()
+      ? this.spinner.show()
+      : timer(1000).subscribe(() => this.spinner.hide());
+
     this.store.dispatch(
       MovieActions.loadTrendingMovies({ page: this.currentPage() ?? 1 })
     );

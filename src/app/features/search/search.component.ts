@@ -15,7 +15,7 @@ import { Movie } from '../../core/models/trend.interface';
 import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { finalize, tap } from 'rxjs';
+import { finalize, tap, timer } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directive';
 
@@ -36,7 +36,7 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
       <h1 class="text-2xl lg:text-3xl font-bold mb-4 text-white">Search</h1>
       <div class="flex flex-col lg:flex-row gap-8">
         <div
-          class="bg-white bg-opacity-10 rounded-lg p-4 h-fit flex w-full lg:w-2/12 sticky top-12"
+          class="bg-white bg-opacity-10 rounded-lg p-4 h-fit flex w-full lg:w-2/12 lg:sticky lg:top-12"
         >
           <form
             [formGroup]="searchForm"
@@ -208,6 +208,10 @@ export class SearchComponent implements OnInit {
   }
 
   submitSearch() {
+    if (this.searchForm.invalid) {
+      return;
+    }
+
     this.spinner.show();
     const value = this.searchForm.value;
     this.tmdbService
@@ -226,7 +230,7 @@ export class SearchComponent implements OnInit {
           this.totalPages.set(res.total_pages);
         }),
         finalize(() => {
-          this.spinner.hide();
+          timer(1000).subscribe(() => this.spinner.hide());
         })
       )
       .subscribe({
