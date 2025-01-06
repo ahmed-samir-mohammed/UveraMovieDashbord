@@ -20,7 +20,7 @@ import { timer } from 'rxjs';
   imports: [MovieCardComponent, NgxSpinnerModule, NgxPaginationModule, NgFor],
   standalone: true,
   template: `
-    <div class="w-[90vw] mx-auto mb-8 mt-[8rem] lg:mt-[10rem]">
+    <div class="w-[90vw] mx-auto mb-24 lg:mb-8 mt-[8rem] lg:mt-[10rem]">
       <h1 class="text-2xl lg:text-3xl font-bold mb-4 text-white">
         Trending Movies
       </h1>

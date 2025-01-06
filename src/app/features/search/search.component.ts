@@ -32,7 +32,7 @@ import { OnlyNumbersDirective } from '../../core/directives/only-numbers.directi
   ],
   standalone: true,
   template: `
-    <div class="lg:w-[95vw] w-[90vw] mx-auto mb-8 mt-[10rem]">
+    <div class="lg:w-[95vw] w-[90vw] mx-auto mb-24 lg:mb-8 mt-[10rem]">
       <h1 class="text-2xl lg:text-3xl font-bold mb-4 text-white">Search</h1>
       <div class="flex flex-col lg:flex-row gap-8">
         <div
