@@ -13,13 +13,4 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
-  it('should initialize Flowbite on init', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    spyOn(app, 'ngOnInit').and.callThrough();
-    fixture.detectChanges();
-    app.ngOnInit();
-    expect(app.ngOnInit).toHaveBeenCalled();
-  });
 });

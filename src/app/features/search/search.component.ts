@@ -180,7 +180,9 @@ export class SearchComponent implements OnInit {
   tmdbService = inject(TMDBService);
   spinner = inject(NgxSpinnerService);
   searchForm!: FormGroup;
-  countriesMap = toSignal(this.store.select(selectCountriesMap));
+  countriesMap = toSignal(this.store.select(selectCountriesMap), {
+    initialValue: [],
+  });
   searchResult = signal<Movie[] | undefined>(undefined);
   p = signal(1);
   totalPages = signal<number | undefined>(undefined);
