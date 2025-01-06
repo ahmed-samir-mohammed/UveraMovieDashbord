@@ -1,4 +1,4 @@
-import { Class } from './../../../../node_modules/@types/estree/index.d';
+import { Class } from 'estree';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 

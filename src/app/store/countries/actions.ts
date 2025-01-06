@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Countries } from '../../models/countries.interface';
+import { Countries } from '../../core/models/countries.interface';
 
 export const loadCountries = createAction('[Countries] Load Countries');
 

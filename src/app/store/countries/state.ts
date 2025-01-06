@@ -1,4 +1,4 @@
-import { CountriesState } from "../../models/countries.interface";
+import { CountriesState } from '../../core/models/countries.interface';
 
 export const initialCountriesState: CountriesState = {
   countries: [],

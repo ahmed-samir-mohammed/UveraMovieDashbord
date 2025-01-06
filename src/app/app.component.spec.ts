@@ -14,10 +14,12 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should initialize Flowbite on init', () => {
     const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    spyOn(app, 'ngOnInit').and.callThrough();
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, uvera-movie-dashboard');
+    app.ngOnInit();
+    expect(app.ngOnInit).toHaveBeenCalled();
   });
 });

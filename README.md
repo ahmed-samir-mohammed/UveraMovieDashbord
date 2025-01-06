@@ -1,3 +1,59 @@
+## Project Overview
+
+UveraMovieDashboard is a web application designed to display trending movies, movie details, and search functionality using the TMDB API. The application leverages Angular as the primary framework and employs modern technologies like NgRx for state management and RxJS for reactive data handling.
+
+## Architecture
+
+- **Feature Modules:** The application is divided into independent feature modules (e.g., Search, Trending, and Movie Details). This ensures better code management and easier feature development.
+- **Shared Components:** The application includes shared components like Navbar and MovieCard to reduce redundancy.
+- **State Management:** NgRx is used for centralized state management to ensure predictable behavior and easier testing.
+- **Interceptor:** An HTTP Interceptor is used to add headers like Authorization to every HTTP request.
+- **Lazy Loading:** Modules are lazy-loaded to enhance application performance and reduce initial load time.
+
+## Technical Choices
+
+- **Angular Framework:** Chosen for its robust architecture, advanced CLI tools, and built-in TypeScript support.
+- **NgRx:** For centralized state management, improving performance and maintainability.
+- **RxJS Signals:** To optimize performance and simplify reactive data handling.
+- **NgxPagination:** To provide seamless pagination experience.
+- **NgxSpinner:** To display loading indicators, enhancing user experience.
+
+## Structure
+
+```
+src/
+├── app/
+│   ├── core/
+│   │   ├── interceptors/
+│   │   │   └── http.interceptor.ts
+│   │   ├── services/
+│   │   │   └── tmdb.service.ts
+│   │   ├── models/
+│   │   │   ├── countries.interface.ts
+│   │   │   ├── genres.interface.ts
+│   │   │   ├── trend.interface.ts
+│   │   │   └── movieDetails.interface.ts
+│   ├── features/
+│   │   ├── trending/
+│   │   │   └── trending.component.ts
+│   │   ├── movie-details/
+│   │   │   └── movie-details.component.ts
+│   │   └── search/
+│   │       └── search.component.ts
+│   ├── layout/
+│   │   └── layout.component.ts
+│   ├── shared/
+│   │   ├── components/
+│   │   │   ├── navbar/
+│   │   │   │   └── navbar.component.ts
+│   │   │   └── movie-card/
+│   │   │       └── movie-card.component.ts
+│   ├── store/
+│   │   ├── countries/
+│   │   ├── genres/
+│   │   └── trending/
+```
+
 # UveraMovieDashboard
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.

@@ -8,21 +8,21 @@ import {
   Validators,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectCountriesMap } from '../../core/store/countries/selectors';
-import * as CountriesActions from '../../core/store/countries/actions';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { selectCountriesMap } from '../../store/countries/selectors';
+import * as CountriesActions from '../../store/countries/actions';
+import { NgFor } from '@angular/common';
 import { Movie } from '../../core/models/trend.interface';
-import { MovieCardComponent } from '../../shared/movie-card/movie-card.component';
+import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { finalize, tap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search',
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    AsyncPipe,
     MovieCardComponent,
     NgxSpinnerModule,
     NgxPaginationModule,
@@ -36,9 +36,9 @@ import { finalize, tap } from 'rxjs';
         <form
           [formGroup]="searchForm"
           (ngSubmit)="submitSearch()"
-          class="w-full flex gap-4 items-end"
+          class="w-full flex gap-4 items-end flex-col lg:flex-row"
         >
-          <div class="flex gap-2 w-full items-end lg:flex-row">
+          <div class="flex gap-2 w-full items-end flex-col md:flex-row">
             <div class="flex flex-col gap-2 w-full md:w-3/12 lg:w-5/12">
               <label class="text-white"> Movie Name </label>
               <input
@@ -69,7 +69,7 @@ import { finalize, tap } from 'rxjs';
                 class="bg-slate-800 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
               >
                 <option selected disabled value="">Choose a country</option>
-                @for (item of (countriesMap$ | async); track $index) {
+                @for (item of countriesMap(); track $index) {
                 <option value="{{ item.iso_3166_1 }}">
                   {{ item.english_name }}
                 </option>
@@ -111,18 +111,18 @@ import { finalize, tap } from 'rxjs';
         </form>
       </div>
       <div class="flex flex-col mt-8">
-        @if ((searchResult().length == 0 )&& submit()) {
+        @if (searchResult()?.length === 0) {
         <p class="text-white text-base text-center">No Movie Found</p>
-        } @defer (when (searchResult().length > 0)) {
+        } @defer (when searchResult()) {
         <div
           class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
         >
           <ng-container
             *ngFor="
-              let movie of searchResult()
+              let movie of searchResult() || []
                 | paginate
                   : {
-                      itemsPerPage: 10,
+                      itemsPerPage: 20,
                       currentPage: p(),
                       totalItems: totalPages()
                     }
@@ -131,9 +131,9 @@ import { finalize, tap } from 'rxjs';
             <app-movie-card [movie]="movie"></app-movie-card>
           </ng-container>
         </div>
+        @if((searchResult()?.length ?? 0) > 0) {
         <div class="flex justify-center mt-8">
           <pagination-controls
-            class="my-pagination rounded"
             (pageChange)="onPageChange($event)"
             [responsive]="true"
             previousLabel="Previous"
@@ -142,7 +142,7 @@ import { finalize, tap } from 'rxjs';
             screenReaderPageLabel="page"
           ></pagination-controls>
         </div>
-        }
+        } }
       </div>
     </div>
   `,
@@ -154,15 +154,17 @@ export class SearchComponent implements OnInit {
   tmdbService = inject(TMDBService);
   spinner = inject(NgxSpinnerService);
   searchForm!: FormGroup;
-  countriesMap$ = this.store.select(selectCountriesMap);
-  searchResult = signal<Movie[]>([]);
+  countriesMap = toSignal(this.store.select(selectCountriesMap));
+  searchResult = signal<Movie[] | undefined>(undefined);
   p = signal(1);
   totalPages = signal<number | undefined>(undefined);
   submit = signal<boolean>(false);
+
   ngOnInit() {
     this.store.dispatch(CountriesActions.loadCountries());
     this.initForm();
   }
+
   initForm() {
     this.searchForm = this.fb.group({
       query: ['', [Validators.required]],
@@ -172,8 +174,8 @@ export class SearchComponent implements OnInit {
       adult: [false],
     });
   }
+
   submitSearch() {
-    this.submit.set(true);
     this.spinner.show();
     const value = this.searchForm.value;
     this.tmdbService
@@ -192,14 +194,11 @@ export class SearchComponent implements OnInit {
           this.totalPages.set(res.total_pages);
         }),
         finalize(() => {
-          this.submit.set(false);
           this.spinner.hide();
         })
       )
       .subscribe({
-        error: (err) => {
-          console.error(err);
-        },
+        error: (err) => console.error(err),
       });
   }
 

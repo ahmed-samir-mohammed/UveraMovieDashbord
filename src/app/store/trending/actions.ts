@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Movie } from '../../models/trend.interface';
+import { Movie } from '../../core/models/trend.interface';
 
 export const loadTrendingMovies = createAction(
   '[Movies] Load Trending Movies',

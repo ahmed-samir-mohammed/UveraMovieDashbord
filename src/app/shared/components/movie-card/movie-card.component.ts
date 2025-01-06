@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Movie } from '../../core/models/trend.interface';
+import { Movie } from '../../../core/models/trend.interface';
 import { NgFor, SlicePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <div
       class="rounded-xl relative overflow-hidden shadow-lg group cursor-pointer"
-      routerLink="/movie/{{ movie.id }}"
+      [routerLink]="navigateToDetails()"
     >
       <img
         class="w-full h-full object-cover"
@@ -31,4 +31,7 @@ import { RouterLink } from '@angular/router';
 })
 export class MovieCardComponent {
   @Input() movie!: Movie;
+  navigateToDetails(): string {
+    return this.movie ? `/movie/${this.movie.id}` : '/'; // التحقق من movie
+  }
 }

@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { TrendResponse } from '../../models/trend.interface';
+import { TrendResponse } from '../../core/models/trend.interface';
 
 const getTrendState = createFeatureSelector<TrendResponse>('trend');
 const getTrend = (state: TrendResponse) => state.results;

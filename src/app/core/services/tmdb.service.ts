@@ -24,7 +24,7 @@ export class TMDBService {
     adult: boolean;
     releaseYear: string;
     page: number;
-    region: number;
+    region: string;
     year: string;
   }): Observable<TrendResponse> {
     return this.http.get<TrendResponse>(
@@ -35,12 +35,6 @@ export class TMDBService {
   getMovieDetails(movieId: number | string): Observable<MovieDetails> {
     return this.http.get<MovieDetails>(
       `${env.TMDB_URL}/movie/${movieId}?append_to_response=videos,images&language=en-US`
-    );
-  }
-
-  getExternalIDs(movieId: number): Observable<MovieDetails> {
-    return this.http.get<MovieDetails>(
-      `${env.TMDB_URL}/movie/${movieId}/external_ids`
     );
   }
 

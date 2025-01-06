@@ -1,20 +1,21 @@
-import {
-  AsyncPipe,
-  DecimalPipe,
-  NgFor,
-  NgIf,
-  UpperCasePipe,
-} from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
 import { TMDBService } from './../../core/services/tmdb.service';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Movie } from '../../core/models/trend.interface';
 import { Store } from '@ngrx/store';
-import { selectGenresMap } from '../../core/store/genres/selectors';
+import { selectGenresMap } from '../../store/genres/selectors';
 import { Genres } from '../../core/models/genres.interface';
-import * as GenreActions from '../../core/store/genres/actions';
+import * as GenreActions from '../../store/genres/actions';
 import { MovieDetails } from '../../core/models/movieDetails.interface';
-import { finalize, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  finalize,
+  map,
+  Observable,
+  switchMap,
+  tap,
+  catchError,
+  of,
+} from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -31,13 +32,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
         }}');"
       >
         <div
-          class="absolute overflow-y-auto top-0 left-0 w-full h-full flex items-start bg-black bg-opacity-80 z-10 pt-32"
+          class="absolute overflow-y-auto top-0 left-0 w-full h-full flex items-start bg-black bg-opacity-80 z-10"
         >
           <div
-            class="flex flex-col items-start gap-8 mx-auto w-[90vw] mt-48 mb-16 lg:mb-0 lg:mt-0"
+            class="flex flex-col items-start gap-8 mx-auto w-[90vw] mb-16 mt-[8rem] lg:mt-[10rem]"
           >
             <div class="flex w-full flex-col lg:flex-row lg:items-center">
-              <div class="lg:w-[60%]">
+              <div class="lg:w-[60%] order-2 lg:order-1">
                 <div class="flex justify-between items-center">
                   <h1 class="text-4xl font-bold text-white mb-4">
                     {{ movie.title }}
@@ -115,33 +116,33 @@ import { NgxSpinnerService } from 'ngx-spinner';
                   </p>
                   }
                 </div>
+                <!-- Video Links -->
+                <div class="w-full mb-8 mt-4">
+                  <h3 class="text-xl text-white mb-2">Videos</h3>
+                  <div
+                    class="flex flex-row flex-wrap gap-2 h-[15rem] overflow-y-auto scrollbar-hide"
+                  >
+                    @for (video of movie.videos.results; track $index) {
+                    <a
+                      [href]="'https://www.youtube.com/watch?v=' + video.key"
+                      target="_blank"
+                      class=" text-white bg-white bg-opacity-20 h-fit hover:bg-blue-700 rounded-lg py-1 px-2"
+                    >
+                      {{ video.name }}
+                    </a>
+                    }
+                  </div>
+                </div>
               </div>
-
               <!-- Movie Poster -->
-              <div class="lg:w-4/12 flex justify-center lg:justify-end">
+              <div
+                class="lg:w-4/12 flex justify-center lg:justify-end order-1 lg:order-2"
+              >
                 <img
-                  class="rounded-lg w-[90%] lg:w-[80%]"
+                  class="rounded-lg w-[90%] md:w-[50%] lg:w-[80%]"
                   src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
                   [alt]="movie.title"
                 />
-              </div>
-            </div>
-
-            <!-- Video Links -->
-            <div class="w-full mb-8">
-              <div class="mt-4">
-                <h3 class="text-xl text-white mb-2">Videos</h3>
-                <div class="flex flex-wrap gap-2">
-                  @for (video of movie.videos.results; track $index) {
-                  <a
-                    [href]="'https://www.youtube.com/watch?v=' + video.key"
-                    target="_blank"
-                    class=" text-white bg-white bg-opacity-20 hover:bg-blue-700 rounded-lg py-1 px-2"
-                  >
-                    {{ video.name }}
-                  </a>
-                  }
-                </div>
               </div>
             </div>
           </div>
@@ -150,7 +151,16 @@ import { NgxSpinnerService } from 'ngx-spinner';
     </ng-container>
     }
   `,
-  styles: ``,
+  styles: `
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  `,
 })
 export class MovieDetailsComponent implements OnInit {
   route = inject(ActivatedRoute);
@@ -163,7 +173,14 @@ export class MovieDetailsComponent implements OnInit {
     map((params) => +params['id']),
     tap(() => this.spinner.show()),
     switchMap((id) =>
-      this.getMovieDetails(id).pipe(finalize(() => this.spinner.hide()))
+      this.getMovieDetails(id).pipe(
+        finalize(() => this.spinner.hide()),
+        catchError((err) => {
+          console.error(err);
+          this.spinner.hide();
+          return of(null);
+        })
+      )
     )
   );
   constructor() {}

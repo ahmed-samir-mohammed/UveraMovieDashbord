@@ -6,7 +6,7 @@ import { routes } from './app.routes';
 import { HTTPInterceptor } from './core/interceptors/http.interceptor';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { Store } from './core/store';
+import { Store } from './store';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
