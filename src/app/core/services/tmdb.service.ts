@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment as env } from '../../../environments/environment.development';
-import { TrendResponse } from '../models/trend.interface';
-import { GenresResponse } from '../models/genres.interface';
-import { MovieDetails } from '../models/movieDetails.interface';
-import { Countries } from '../models/countries.interface';
+import { TrendResponse } from '../interface/trend.interface';
+import { GenresResponse } from '../interface/genres.interface';
+import { MovieDetails } from '../interface/movieDetails.interface';
+import { Countries } from '../interface/countries.interface';
 
 @Injectable({
   providedIn: 'root',

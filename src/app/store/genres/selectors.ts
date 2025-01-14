@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { GenreState } from '../../core/models/genres.interface';
+import { GenreState } from '../../core/interface/genres.interface';
 
 export const getGenresState = createFeatureSelector<GenreState>('genres');
 const getGenres = (state: GenreState) => state.genres;

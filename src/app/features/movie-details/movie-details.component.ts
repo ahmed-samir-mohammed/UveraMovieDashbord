@@ -4,9 +4,9 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectGenresMap } from '../../store/genres/selectors';
-import { Genres } from '../../core/models/genres.interface';
+import { Genres } from '../../core/interface/genres.interface';
 import * as GenreActions from '../../store/genres/actions';
-import { MovieDetails } from '../../core/models/movieDetails.interface';
+import { MovieDetails } from '../../core/interface/movieDetails.interface';
 import {
   finalize,
   map,

@@ -1,4 +1,4 @@
-import { GenreState } from '../../core/models/genres.interface';
+import { GenreState } from '../../core/interface/genres.interface';
 
 export const initialGenresState: GenreState = {
   genres: [],

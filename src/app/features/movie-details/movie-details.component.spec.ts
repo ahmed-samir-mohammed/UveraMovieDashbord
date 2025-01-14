@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TMDBService } from './../../core/services/tmdb.service';
-import { MovieDetails } from '../../core/models/movieDetails.interface';
+import { MovieDetails } from '../../core/interface/movieDetails.interface';
 import * as GenreActions from '../../store/genres/actions';
-import { Genres } from '../../core/models/genres.interface';
+import { Genres } from '../../core/interface/genres.interface';
 
 describe('MovieDetailsComponent', () => {
   let component: MovieDetailsComponent;

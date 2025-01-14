@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Genres } from '../../core/models/genres.interface';
+import { Genres } from '../../core/interface/genres.interface';
 
 export const loadGenres = createAction('[Genres] Load Genres');
 

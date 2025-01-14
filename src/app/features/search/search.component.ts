@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { selectCountriesMap } from '../../store/countries/selectors';
 import * as CountriesActions from '../../store/countries/actions';
 import { NgFor } from '@angular/common';
-import { Movie } from '../../core/models/trend.interface';
+import { Movie } from '../../core/interface/trend.interface';
 import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';

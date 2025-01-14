@@ -1,4 +1,4 @@
-import { TrendResponse } from '../../core/models/trend.interface';
+import { TrendResponse } from '../../core/interface/trend.interface';
 
 export const initialState: TrendResponse = {
   page: 1,
