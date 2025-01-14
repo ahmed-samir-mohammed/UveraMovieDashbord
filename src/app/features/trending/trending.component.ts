@@ -63,11 +63,10 @@ import { timer } from 'rxjs';
 export class TrendingComponent {
   store = inject(Store);
   spinner = inject(NgxSpinnerService);
-
-  movies = toSignal(this.store.select(selectTrend));
-  loading = toSignal(this.store.select(selectLoading));
-  totalPages = toSignal(this.store.select(selectTotalPages));
-  currentPage: WritableSignal<number> = signal(1);
+  movies = toSignal(this.store.select(selectTrend)); // To be used in the template
+  loading = toSignal(this.store.select(selectLoading)); // To be used in the template
+  totalPages = toSignal(this.store.select(selectTotalPages)); // To be used in the template
+  currentPage: WritableSignal<number> = signal(1); // To update the current page
 
   constructor() {
     this.store

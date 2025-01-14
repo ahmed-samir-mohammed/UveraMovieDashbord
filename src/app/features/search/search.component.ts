@@ -193,7 +193,7 @@ export class SearchComponent implements OnInit {
     this.initForm();
   }
 
-  initForm() {
+  private initForm() {
     this.searchForm = this.fb.group({
       query: ['', [Validators.required]],
       releaseYear: [

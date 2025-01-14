@@ -16,6 +16,8 @@ import {
   catchError,
   of,
   timer,
+  Subject,
+  takeUntil,
 } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -170,13 +172,13 @@ export class MovieDetailsComponent implements OnInit {
   tmdbService = inject(TMDBService);
   store = inject(Store);
   spinner = inject(NgxSpinnerService);
-  genresMap$ = this.store.select(selectGenresMap);
   id!: string;
   movie$ = this.route.params.pipe(
     map((params) => +params['id']),
     tap(() => this.spinner.show()),
     switchMap((id) =>
       this.getMovieDetails(id).pipe(
+        tap((movie) => console.log(movie)),
         finalize(() => {
           timer(1000).subscribe(() => this.spinner.hide());
         }),
@@ -188,7 +190,13 @@ export class MovieDetailsComponent implements OnInit {
       )
     )
   );
+  private destroy$ = new Subject<void>();
   constructor() {}
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   ngOnInit(): void {
     this.store.dispatch(GenreActions.loadGenres());
@@ -200,9 +208,12 @@ export class MovieDetailsComponent implements OnInit {
 
   getGenres(genre: Genres[]): string {
     let genresList: Genres[] = [];
-    this.genresMap$.subscribe((genresMap) => {
-      genresList = genre.map((genre) => genresMap[genre.id] || 'Unknown');
-    });
+    this.store
+      .select(selectGenresMap)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((genresMap) => {
+        genresList = genre.map((genre) => genresMap[genre.id] || 'Unknown');
+      });
     return genresList.join(', ');
   }
 }
