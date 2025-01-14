@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MovieCardComponent } from './movie-card.component';
-import { Movie } from '../../../core/models/trend.interface';
+import { Movie } from '../../../core/interface/trend.interface';
 import { ActivatedRoute } from '@angular/router';
 
 describe('MovieCardComponent', () => {
